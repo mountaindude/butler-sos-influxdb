@@ -1,0 +1,33 @@
+{
+  "name": "butler-sos-influxdb",
+  "version": "1.0.0",
+  "description": "Butler SenseOps Stats/Influxdb (\"Butler-SOS/Influxdb\") is a Node.js service publishing operational Qlik Sense metrics to MQTT and Influxdb",
+  "main": "butler-sos-influxdb.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mountaindude/butler-sos-influxdb.git"
+  },
+  "keywords": [
+    "butler",
+    "butler-sos",
+    "senseops",
+    "influxdb",
+    "qliksense"
+  ],
+  "author": "Göran Sander",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mountaindude/butler-sos-influxdb/issues"
+  },
+  "homepage": "https://github.com/mountaindude/butler-sos-influxdb#readme",
+  "dependencies": {
+    "config": "^1.25.1",
+    "influx": "^5.0.0-alpha.4",
+    "mqtt": "^2.5.0",
+    "request": "^2.81.0",
+    "winston": "^2.3.1"
+  }
+}
