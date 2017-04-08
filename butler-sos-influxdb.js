@@ -57,7 +57,6 @@ function postToInfluxdb(host, serverName, body) {
     var formattedTime = days + ' days, ' + hours + 'h ' + minutes.substr(-2) + 'm ' + seconds.substr(-2) + 's';
 
 
-
     // Write the whole reading to Influxdb
     globals.influx.writePoints([{
                 measurement: 'sense_server',
@@ -68,7 +67,7 @@ function postToInfluxdb(host, serverName, body) {
                     version: body.version,
                     started: body.started,
                     uptime: formattedTime
-                },
+                }
             },
             {
                 measurement: 'mem',
@@ -79,7 +78,19 @@ function postToInfluxdb(host, serverName, body) {
                     comitted: body.mem.comitted,
                     allocated: body.mem.allocated,
                     free: body.mem.free
+                }
+            },
+            {
+                measurement: 'apps',
+                tags: {
+                    host: serverName
                 },
+                fields: {
+                    active_docs_count: body.apps.active_docs.length,
+                    loaded_docs_count: body.apps.loaded_docs.length,
+                    calls: body.apps.calls,
+                    selections: body.apps.selections
+                }
             },
             {
                 measurement: 'cpu',
@@ -88,7 +99,7 @@ function postToInfluxdb(host, serverName, body) {
                 },
                 fields: {
                     total: body.cpu.total
-                },
+                }
             },
             {
                 measurement: 'session',
@@ -98,7 +109,7 @@ function postToInfluxdb(host, serverName, body) {
                 fields: {
                     active: body.session.active,
                     total: body.session.total
-                },
+                }
             },
             {
                 measurement: 'users',
@@ -108,7 +119,7 @@ function postToInfluxdb(host, serverName, body) {
                 fields: {
                     active: body.users.active,
                     total: body.users.total
-                },
+                }
             },
             {
                 measurement: 'cache',
@@ -121,7 +132,7 @@ function postToInfluxdb(host, serverName, body) {
                     added: body.cache.added,
                     replaced: body.cache.replaced,
                     bytes_added: body.cache.bytes_added
-                },
+                }
             }
 
         ])
@@ -132,8 +143,6 @@ function postToInfluxdb(host, serverName, body) {
         .catch(err => {
             console.error(`Error saving data to InfluxDB! ${err.stack}`)
         })
-
-
 
 }
 
@@ -166,7 +175,7 @@ function postToMQTT(host, serverName, body) {
 
     if (body.cache.lookups > 0) {
         globals.mqttClient.publish(baseTopic + serverName + '/cache/hit_ratio', Math.floor(body.cache.hits / body.cache.lookups * 100).toString());
-        console.log(Math.floor(body.cache.hits / body.cache.lookups * 100).toString());
+        // console.log(Math.floor(body.cache.hits / body.cache.lookups * 100).toString());
     }
 }
 
@@ -191,6 +200,9 @@ function getStatsFromSense(host, serverName) {
         if (!error && response.statusCode === 200) {
             globals.logger.verbose('Received ok response from ' + serverName);
             globals.logger.debug(body);
+
+
+            // globals.logger.info(body.apps.loaded_docs.length);
 
             // Post to MQTT
             postToMQTT(host, serverName, body);

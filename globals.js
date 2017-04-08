@@ -44,6 +44,18 @@ const influx = new Influx.InfluxDB({
             ]
         },
         {
+            measurement: 'apps',
+            fields: {
+                active_docs_count: Influx.FieldType.INTEGER,
+                loaded_docs_count: Influx.FieldType.INTEGER,
+                calls: Influx.FieldType.INTEGER,
+                selections: Influx.FieldType.INTEGER
+            },
+            tags: [
+                'host'
+            ]
+        },
+        {
             measurement: 'cpu',
             fields: {
                 total: Influx.FieldType.INTEGER
